@@ -5,7 +5,8 @@ from assertpy import assert_that
 from selenium.webdriver.support.select import Select
 
 from base.webdriver_listener import WebDriverWrapper
-from utilities import data_source, read_data
+from pages.login_page import LoginPage
+from utilities import data_source
 
 
 class TestLoginUI(WebDriverWrapper):
@@ -30,20 +31,25 @@ class TestLogin(WebDriverWrapper):
     @pytest.mark.parametrize("username,password,language,expected_title",
                              data_source.test_valid_login_data_excel)
     def test_valid_login(self, username, password, language, expected_title):
-        self.driver.find_element(By.ID, "authUser").send_keys(username)
-        self.driver.find_element(By.CSS_SELECTOR, "#clearPass").send_keys(password)
-        select_lan = Select(self.driver.find_element(By.XPATH, "//select[@name='languageChoice']"))
-        select_lan.select_by_visible_text(language)
-        self.driver.find_element(By.ID, "login-button").click()
+        login_page = LoginPage(self.driver)
+        login_page.enter_username(username)
+        login_page.enter_password(password)
+        login_page.select_language_by_text(language)
+        login_page.click_login()
+
         assert_that(expected_title).is_equal_to(self.driver.title)
 
     @pytest.mark.parametrize("username,password,language,expected_error", data_source.test_invalid_login)
     def test_invalid_login(self, username, password, language, expected_error):
-        self.driver.find_element(By.ID, "authUser").send_keys(username)
-        self.driver.find_element(By.CSS_SELECTOR, "#clearPass").send_keys(password)
-        select_lan = Select(self.driver.find_element(By.XPATH, "//select[@name='languageChoice']"))
-        select_lan.select_by_visible_text(language)
-        self.driver.find_element(By.ID, "login-button").click()
-        actual_error = self.driver.find_element(By.XPATH, "//div[contains(text(),'Invalid')]").text
+
+        print(self.driver)
+        login_page = LoginPage(self.driver)
+
+        login_page.enter_username(username)
+        login_page.enter_password(password)
+        login_page.select_language_by_text(language)
+        login_page.click_login()
+
+        actual_error = login_page.get_invalid_error_message()
         # assert the error message - Invalid username or password
         assert_that(expected_error).is_equal_to(actual_error)
