@@ -69,3 +69,17 @@ print(df.values.tolist())
 print(50 * "-")
 list=read_data.get_csv_data("../test_data/test_valid_login.csv")
 print(list)
+
+""" reading excel """
+print(50 * "-")
+
+df_result=pandas.read_excel("../test_data/open_emr_data.xlsx","test_valid_login")
+print(df_result)
+
+print(df_result.loc[0].tolist())
+print(df_result.values.tolist())
+
+""" reading excel file using method """
+print(50 * "-")
+list=read_data.get_excel_data("../test_data/open_emr_data.xlsx","test_valid_login")
+print(list)

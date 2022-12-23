@@ -5,7 +5,7 @@ from assertpy import assert_that
 from selenium.webdriver.support.select import Select
 
 from base.webdriver_listener import WebDriverWrapper
-from utilities import data_source
+from utilities import data_source, read_data
 
 
 class TestLoginUI(WebDriverWrapper):
@@ -27,7 +27,8 @@ class TestLoginUI(WebDriverWrapper):
 
 class TestLogin(WebDriverWrapper):
 
-    @pytest.mark.parametrize("username,password,language,expected_title", data_source.test_valid_login_data)
+    @pytest.mark.parametrize("username,password,language,expected_title",
+                             data_source.test_valid_login_data_excel)
     def test_valid_login(self, username, password, language, expected_title):
         self.driver.find_element(By.ID, "authUser").send_keys(username)
         self.driver.find_element(By.CSS_SELECTOR, "#clearPass").send_keys(password)
@@ -36,8 +37,8 @@ class TestLogin(WebDriverWrapper):
         self.driver.find_element(By.ID, "login-button").click()
         assert_that(expected_title).is_equal_to(self.driver.title)
 
-    @pytest.mark.parametrize("username,password,language,expected_error",data_source.test_invalid_login)
-    def test_invalid_login(self,username,password,language,expected_error):
+    @pytest.mark.parametrize("username,password,language,expected_error", data_source.test_invalid_login)
+    def test_invalid_login(self, username, password, language, expected_error):
         self.driver.find_element(By.ID, "authUser").send_keys(username)
         self.driver.find_element(By.CSS_SELECTOR, "#clearPass").send_keys(password)
         select_lan = Select(self.driver.find_element(By.XPATH, "//select[@name='languageChoice']"))
