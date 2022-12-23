@@ -36,10 +36,13 @@ class TestLogin(WebDriverWrapper):
         self.driver.find_element(By.ID, "login-button").click()
         assert_that(expected_title).is_equal_to(self.driver.title)
 
-    def test_invalid_login(self):
-        self.driver.find_element(By.ID, "authUser").send_keys("john")
-        self.driver.find_element(By.CSS_SELECTOR, "#clearPass").send_keys("john123")
+    @pytest.mark.parametrize("username,password,language,expected_error",data_source.test_invalid_login)
+    def test_invalid_login(self,username,password,language,expected_error):
+        self.driver.find_element(By.ID, "authUser").send_keys(username)
+        self.driver.find_element(By.CSS_SELECTOR, "#clearPass").send_keys(password)
         select_lan = Select(self.driver.find_element(By.XPATH, "//select[@name='languageChoice']"))
-        select_lan.select_by_visible_text("Dutch")
+        select_lan.select_by_visible_text(language)
         self.driver.find_element(By.ID, "login-button").click()
+        actual_error = self.driver.find_element(By.XPATH, "//div[contains(text(),'Invalid')]").text
         # assert the error message - Invalid username or password
+        assert_that(expected_error).is_equal_to(actual_error)

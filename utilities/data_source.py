@@ -5,4 +5,5 @@ test_valid_login_data = [
     ("accountant", "accountant", "English (Indian)", "OpenEMR")
 ]
 
-
+test_invalid_login = [["john", "john123", "Dutch", "Invalid username or password"],
+                      ["peter", "peter123", "Greek", "Invalid username or password"]]
