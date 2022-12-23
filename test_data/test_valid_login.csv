@@ -1,0 +1,4 @@
+username;password;language;expected_title
+receptionist;receptionist;English (Indian);OpenEMR
+clinician;clinician;English (Indian);OpenEMR
+
