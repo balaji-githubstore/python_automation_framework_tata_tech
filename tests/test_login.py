@@ -6,7 +6,7 @@ from selenium.webdriver.support.select import Select
 
 from base.webdriver_listener import WebDriverWrapper
 from utilities import data_source
-
+# Code without page object model
 
 class TestLoginUI(WebDriverWrapper):
     def test_title(self):
