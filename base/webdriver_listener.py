@@ -4,8 +4,8 @@ from selenium import webdriver
 
 class WebDriverWrapper:
     driver = None
-
-    @pytest.fixture(scope="function",autouse=True)
+    my_name=None
+    @pytest.fixture(scope="function", autouse=True)
     def setup(self):
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
