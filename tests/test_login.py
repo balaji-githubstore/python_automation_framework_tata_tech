@@ -18,7 +18,8 @@ class TestLoginUI(WebDriverWrapper):
         assert_that(actual_desc).contains("Electronic Health Record and Medical Practice Management")
 
     def test_login_placeholder(self):
-        actual_username_placeholder = self._driver.find_element(By.ID, "authUser").get_attribute("placeholder")
+        login_page = LoginPage(self._driver)
+        actual_username_placeholder = login_page.get_username_placeholder()
         actual_password_placeholder = self._driver.find_element(By.CSS_SELECTOR, "#clearPass").get_attribute(
             "placeholder")
 

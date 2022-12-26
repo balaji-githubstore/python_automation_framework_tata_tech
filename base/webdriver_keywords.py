@@ -14,6 +14,9 @@ class WebDriverKeywords:
         self.__wait = WebDriverWait(driver, 30)
         self.__action = ActionChains(driver)
 
+    # def enter_data(self,by,locator,text):
+    #     self.__driver.find_element(by, locator).send_keys(text)
+
     def click_element(self, locator):
         self.__wait.until(expected_conditions.visibility_of_element_located(locator)).click()
 
@@ -27,8 +30,9 @@ class WebDriverKeywords:
     def get_text_element(self, locator):
         return self.__wait.until(expected_conditions.visibility_of_element_located(locator)).text
 
+    def get_attribute_element(self, locator,attribute):
+        return self.__wait.until(expected_conditions.visibility_of_element_located(locator)).get_attribute(attribute)
+
     def mouse_hover_element(self, locator):
         self.__action.move_to_element(
             self.__wait.until(expected_conditions.visibility_of_element_located(locator))).perform()
-
-
