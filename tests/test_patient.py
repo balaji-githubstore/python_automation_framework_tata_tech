@@ -6,48 +6,42 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from base.webdriver_listener import WebDriverWrapper
 from pages.login_page import LoginPage
+from pages.main_page import MainPage
+from pages.patient_dashboard_page import PatientDashboardPage
+from pages.search_or_add_patient_page import SearchOrAddPatientPage
 
 
 class TestPatient(WebDriverWrapper):
 
     def test_add_valid_patient(self):
-        login_page = LoginPage(self.driver)
+        login_page = LoginPage(self._driver)
         login_page.enter_username("admin")
         login_page.enter_password("pass")
         login_page.select_language_by_text("English (Indian)")
         login_page.click_login()
 
-        self.driver.find_element(By.XPATH, "//div[text()='Patient']").click()
-        self.driver.find_element(By.XPATH, "//div[text()='New/Search']").click()
+        # login_page.login_to_system("admin","pass","English (Indian)")
 
-        self.driver.switch_to.frame(self.driver.find_element(By.XPATH, "//iframe[@name='pat']"))
+        main_page = MainPage(self._driver)
+        main_page.click_on_patient()
+        main_page.click_on_new_search()
 
-        self.driver.find_element(By.CSS_SELECTOR, "#form_fname").send_keys("John")
-        self.driver.find_element(By.CSS_SELECTOR, "#form_lname").send_keys("Wick")
-        self.driver.find_element(By.XPATH, "//input[@id='form_DOB']").send_keys("2022-12-26")
-        select_gender = Select(self.driver.find_element(By.XPATH, "//select[@id='form_sex']"))
-        select_gender.select_by_visible_text("Male")
-        self.driver.find_element(By.XPATH, "//button[@id='create']").click()
+        sea_add_page = SearchOrAddPatientPage(self._driver)
+        sea_add_page.switch_to_pat_frame()
+        sea_add_page.enter_firstname("John")
+        sea_add_page.enter_lastname("Wick")
+        sea_add_page.enter_dob("2022-12-26")
+        sea_add_page.select_gender_by_text("Male")
+        sea_add_page.click_create_new_patient()
 
-        self.driver.switch_to.default_content()
+        sea_add_page.switch_to_main_html()
+        sea_add_page.click_confirm_create_new_patient()
 
-        self.driver.switch_to.frame(self.driver.find_element(By.XPATH, "//iframe[@id='modalframe']"))
-        self.driver.find_element(By.XPATH, "// input[ @ value = 'Confirm Create New Patient']").click()
-        self.driver.switch_to.default_content()
+        actual_alert_text = sea_add_page.get_alert_text_and_handle_it()
+        sea_add_page.close_hbd_popup()
 
-        wait = WebDriverWait(self.driver, 30)
-        wait.until(expected_conditions.alert_is_present())
-
-        actual_alert_text = self.driver.switch_to.alert.text
-        self.driver.switch_to.alert.accept()
-
-        if len(self.driver.find_elements(By.XPATH, "//div[@class ='closeDlgIframe']")) > 0:
-            self.driver.find_element(By.XPATH, "//div[@class ='closeDlgIframe']").click()
-
-        self.driver.switch_to.frame(self.driver.find_element(By.XPATH, "//iframe[@name='pat']"))
-
-        actual_added_paitent = self.driver.find_element(By.XPATH,
-                                                        "//h2[contains(text(),'Medical Record Dashboard')]").text
+        patient_dashboard_page = PatientDashboardPage(self._driver)
+        actual_added_paitent = patient_dashboard_page.get_added_patient_name()
 
         assert_that(actual_alert_text).contains("Tobacco")
         assert_that(actual_added_paitent).contains("Medical Record Dashboard - John Wick")

@@ -25,3 +25,9 @@ class LoginPage:
 
     def get_invalid_error_message(self):
         return self.__driver.find_element(By.XPATH, "//div[contains(text(),'Invalid')]").text
+
+    def login_to_system(self, username, password, language):
+        self.enter_username(username)
+        self.enter_password(password)
+        self.select_language_by_text(language)
+        self.click_login()
