@@ -1,6 +1,10 @@
 import pytest
 from selenium import webdriver
 
+import logging
+
+Logger = logging.getLogger()
+
 
 class WebDriverWrapper:
     _driver = None

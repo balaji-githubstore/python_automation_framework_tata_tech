@@ -1,7 +1,12 @@
 """ Will be deleted. Not part of the framework """
 import pandas
 
+import config
 from utilities import read_data
+
+print(config.project_path)
+
+
 
 df = pandas.read_csv(filepath_or_buffer="../test_data/test_valid_login.csv", delimiter=";")
 
