@@ -4,6 +4,10 @@ import pandas
 import config
 from utilities import read_data
 
+df = pandas.read_json(path_or_buf="../test_data/data.json", typ="dictionary")
+print(df["browser"])
+print(df["url"])
+
 print(config.project_path)
 
 

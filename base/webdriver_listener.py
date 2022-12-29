@@ -1,5 +1,6 @@
 import pytest
 from selenium import webdriver
+from utilities import read_data
 
 import logging
 
@@ -12,9 +13,15 @@ class WebDriverWrapper:
 
     @pytest.fixture(scope="function", autouse=True)
     def setup(self):
-        self._driver = webdriver.Chrome()
+        browser = read_data.get_read_json("data.json", "browser")
+        url = read_data.get_read_json("data.json", "url")
+        if browser == "ch":
+            self._driver = webdriver.Chrome()
+        else:
+            self._driver = webdriver.Edge()
+
         self._driver.maximize_window()
         self._driver.implicitly_wait(30)
-        self._driver.get("https://demo.openemr.io/b/openemr")
+        self._driver.get(url)
         yield
         self._driver.quit()
